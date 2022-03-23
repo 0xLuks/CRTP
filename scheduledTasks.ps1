@@ -1,7 +1,7 @@
 Utile pour DonPAPI
 ----------------------------------------------------------------------------------
 
-### Liste le nombre de tâches planifiées
+### Lister le nombre de tâches planifiées
 (Get-ScheduledTask).Count
 
 ### Lister les tâches planifiées (path, taskName, state)
