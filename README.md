@@ -1,6 +1,6 @@
 # Certified Red Team Professional (Pentester Academy)
 
-Notes for the [CRTP exam](https://www.pentesteracademy.com/activedirectorylab)
+Cheatsheet for the [CRTP exam](https://www.pentesteracademy.com/activedirectorylab)
 
 Summary
 =================
