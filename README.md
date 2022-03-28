@@ -2,6 +2,8 @@
 
 Cheatsheet for the [CRTP exam](https://www.pentesteracademy.com/activedirectorylab)
 
+*All the commands below have been tested.*
+
 # Summary
 
  - [Domain Enumeration](#-domain-enumeration)
