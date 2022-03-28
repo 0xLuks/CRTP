@@ -4,6 +4,8 @@ Cheatsheet for the [CRTP exam](https://www.pentesteracademy.com/activedirectoryl
 
 *All the commands below have been tested.*
 
+:heart: Powershell
+
 # Summary
 
  - [Domain Enumeration](#-domain-enumeration)
