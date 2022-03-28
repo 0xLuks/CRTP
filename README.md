@@ -27,7 +27,7 @@ Two ways:
 - [Powerview](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1) - `@harmj0y`
 - [AD Module](https://github.com/samratashok/ADModule) - `@nikhil_mitt`
 
-### [Domain](#-domain)
+### [](#-domain) Domain
 
 | Powerview | AD Module | Information |
 |-----------|-----------|-------------|
