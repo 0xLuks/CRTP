@@ -15,7 +15,7 @@ Cheatsheet for the [CRTP exam](https://www.pentesteracademy.com/activedirectoryl
    - [Groups](#-groups)
    - [Logged-in users](#-logged-in-users)
    - [Share and sensitive files](#-share-and-sensitive-files)
-   - [Group Policy Objects](#-group-policy-objects)
+   - [Group policy objects](#-group-policy-objects)
  * [Local Privilege Escalation](#-local-privilege-escalation)
  * [BloodHound](#-bloodhound)
  * [Lateral Movement](#-lateral-movement)
@@ -91,9 +91,11 @@ Two ways:
 | `Invoke-FileFinder -Verbose` | find sensitive files on hosts in the local domain |
 | `Get-NetFileServer` | get a list of file servers used by current domain users |
 
-### [](#-group-policy-objects) Group Policy Objects
+### [](#-group-policy-objects) Group policy objects
 
-Soon
+#### What's a GPO ?
+
+[Wiki](https://en.wikipedia.org/wiki/Group_Policy)
 
 ## [↑](#table-of-contents) Local Privilege Escalation
 
