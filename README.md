@@ -21,10 +21,13 @@ Cheatsheet for the [CRTP exam](https://www.pentesteracademy.com/activedirectoryl
    - [Trusts](#-trusts)
    - [Forests](#-forests)
    - [User hunting](#-user-hunting)
- * [Local Privilege Escalation](#-local-privilege-escalation)
- * [BloodHound](#-bloodhound)
- * [Lateral Movement](#-lateral-movement)
- * [Domain PrivEsc](#-domain-privesc)
+ - [Local Privilege Escalation](#-local-privilege-escalation)
+ - [BloodHound](#-bloodhound)
+ - [Lateral Movement](#-lateral-movement)
+   - [Powershell remoting](#-powershell-remoting)
+   - [Invoke-Mimikatz](#-invoke-mimikatz)
+ - [Domain PrivEsc](#-domain-privesc)
+   - [Kerberoast](#-kerberoast)
  * [Domain Persistence](#-domain-persistence)
  * [Enterprise PrivEsc](#-enterprise-privesc)
  * [Enterprise Persistence](#-enterprise-persistence)
@@ -201,7 +204,7 @@ Finally, click on `Upload Data` and select the .zip file that contains the domai
 
 ## [](#table-of-contents) Lateral Movement
 
-### Powershell Remoting
+### [](#-powershell-remoting) Powershell remoting
 
 Access with PS Remoting to a remote machine (WINRM|5985/tcp)
 
@@ -231,7 +234,7 @@ Invoke-Command -FilePath {FILEPATH}
 Enter-PSSession -Session $sess
 ```
 
-### Invoke-Mimikatz
+### [](#-invoke-mimikatz) Invoke-Mimikatz
 
 Dump credentials on a local machine
 
@@ -251,7 +254,11 @@ Invoke-Mimikatz -DumpCreds -ComputerName@("sys1","sys2")
 Invoke-Mimikatz -Command '"sekurlsa::pth /user:{USER} /domain:{DOMAIN} /ntlm:{NTLM_HASH} /run:powershell.exe"'
 ```
 
-## [↑](#table-of-contents) Domain PrivEsc
+## [](#table-of-contents) Domain PrivEsc
+
+### [](#-kerberoast) Kerberoast
+
+Soon
 
 ## [↑](#table-of-contents) Domain Persistence
 
