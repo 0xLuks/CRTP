@@ -174,7 +174,7 @@ Several tools:
 
 ## [](#table-of-contents) BloodHound
 
-[BloodHound](https://github.com/BloodHoundAD/BloodHound) uses graph theory to reveal the hidden and often unintended relationships within an Active Directory or Azure environment. To use it, you need several components:
+[BloodHound](https://github.com/BloodHoundAD/BloodHound) was created by `@_wald0`, `@CptJesus`, and `@harmj0y`. The tool uses graph theory to reveal the hidden and often unintended relationships within an Active Directory or Azure environment. To use it, you need several components:
 - SharpHound - is used for collect the data
 - Neo4j - is a graph database management system developed by Neo4j, Inc.
 - BloodHound
