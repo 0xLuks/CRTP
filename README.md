@@ -16,6 +16,11 @@ Cheatsheet for the [CRTP exam](https://www.pentesteracademy.com/activedirectoryl
    - [Logged-in users](#-logged-in-users)
    - [Share and sensitive files](#-share-and-sensitive-files)
    - [Group policy objects](#-group-policy-objects)
+   - [Organizational unit](#-organizational-unit)
+   - [Access control list](#-access-control-list)
+   - [Trusts](#-trusts)
+   - [Forests](#-forests)
+   - [User hunting](#-user-hunting)
  * [Local Privilege Escalation](#-local-privilege-escalation)
  * [BloodHound](#-bloodhound)
  * [Lateral Movement](#-lateral-movement)
@@ -93,13 +98,104 @@ Two ways:
 
 ### [](#-group-policy-objects) Group policy objects
 
-#### What's a GPO ?
+| Powerview | AD Module | Information |
+|-----------|-----------|-------------|
+| `Get-NetGPO` | `Get-GPO -All` | list all GPOs |
+| `Get-NetGPO -ComputerName {TARGET}` | | lists the GPOs on a specific computer |
+| `Get-NetGPOGroup` | | gets all GPOs in a domain that set "Restricted Groups" |
+| `Find-GPOComputerAdmin -ComputerName {TARGET}` | | list users of local group using GPO |
+| `Find-GPOLocation -UserName {USER} -Verbose` | | get the location of GPOs for a specific user |
 
-[Wiki](https://en.wikipedia.org/wiki/Group_Policy)
+### [](#-ou) Organizational unit
 
-## [↑](#table-of-contents) Local Privilege Escalation
+| Powerview | AD Module | Information |
+|-----------|-----------|-------------|
+| `Get-NetOU -FullData` | `Get-ADOrganizationalUnit -Filter * -Properties *` | list all the OUs in the domain |
+| `Get-NetOU -OUName {OU} \| %{Get-NetComputer -ADSpath $_}` | | list the computers in a specific OU |
+| `(Get-NetOU {OU} -FullData).gplink` | `Get-GPO -Guid {GPLINK}` | list a specific GPO applied to an OU |
 
-## [↑](#table-of-contents) BloodHound
+### [](#-access-control-list) Access control list
+
+| Powerview | Information |
+|-----------|-------------|
+| `Get-ObjectAcl -SamAccountName {object} -ResolveGUIDs -Verbose` | list the ACLs associated with a specific object (user, group...) |
+| `Get-ObjectAcl -ADSprefix '{PREFIX}' -Verbose` | list the ACLs associated with the specified prefix to be used for the search |
+| `Get-ObjectAcl -ADSpath {LDAP_PATH} -ResolveGUIDs -Verbose` | list the ACLs associated with a specific LDAP path |
+| `Invoke-ACLScanner -ResolveGUIDs` | find interesting ACLs |
+| `Invoke-ACLScanner -ResolveGUIDs \| ?{$_.IdentityReference -match "{USERS/GROUPS}"}` | find interesting ACLs for specific user/group |
+| `Get-PathAcl -Path "\\{TARGET_PATH}"` | list of ACLs associated with a specific path |
+
+### [](#-trusts) Trusts
+
+| Powerview | AD Module | Information |
+|-----------|-----------|-------------|
+| `Get-NetDomainTrust` | `Get-ADTrust -Filter *` | list all trust relationships between domains in the current domain |
+| `Get-NetDomainTrust -Domain {DOMAIN}` | `Get-ADTrust -Identity {DOMAIN}` | lists all trust relationships between domains in another domain |
+
+### [](#-forests) Forests
+
+| Powerview | AD Module | Information |
+|-----------|-----------|-------------|
+| `Get-NetForest` | `Get-ADForest` | get information about the current forest |
+| `Get-NetForest -Forest {FOREST}` | `Get-ADForest -Identity {FOREST}` | get information about another forest |
+| `Get-NetForestDomain` | `(Get-ADForest).Domains` | list all domains of the current forest |
+| `Get-NetForestDomain -Forest {FOREST}` | | list all domain of another forest |
+| `Get-NetForestDomain -Verbose \| Get-NetDomainTrust \| ?{$_.TrustType -eq 'External'}` | | get the external forests |
+| `Get-NetForestTrust` | `Get-ADTrust -Filter 'msDS-TrustForestTrustInfo -ne "$null"'` | mapping the trust relationships of one forest |
+| `Get-NetForestTrust -Forest {FOREST}` | | mapping the trust relationships of another forest |
+
+### [](#-user-hunting) User hunting
+
+| Powerview | Information |
+|-----------|-------------|
+| `Find-LocalAdminAccess -Verbose` | find all machines on the current domain where the current user has local admin access |
+| `Find-WMILocalAdminAccess` | same but with WMI |
+| `Find-PSRemotingLocalAdminAccess` | same but with PS Remoting |
+| `Invoke-EnumerateLocalAdmin -Verbose` | find local administrators on all machines in the domain ⚠️ requires admin rights on non-DC machines |
+| `Invoke-UserHunter -UserName/GroupName "{USER/GROUP}"` | find computers where a domain admin (or user/group) has sessions |
+| `Invoke-UserHunter -CheckAccess` | to confirm access |
+| `Invoke-UserHunter -Stealth` | find machines where a domain admin is logged in |
+
+## [](#table-of-contents) Local Privilege Escalation
+
+Several tools:
+- [PowerUp](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1) - `@harmj0y`
+- [BeRoot](https://github.com/AlessandroZ/BeRoot) - `@Alessandro Zanni`
+- [PrivEsc](https://github.com/enjoiz/Privesc/blob/master/privesc.ps1) - `@Jakub Palaczynski`
+
+| Tool | Cmd | Information |
+|-----------|-----------|-------------|
+| PowerUp | `Invoke-AllChecks` | check common misconfigurations to find a way to escalate our privilege |
+| BeRoot | `.\beRoot.exe` | same |
+| privesc | `Invoke-PrivEsc` | same |
+
+## [](#table-of-contents) BloodHound
+
+[BloodHound](https://github.com/BloodHoundAD/BloodHound) uses graph theory to reveal the hidden and often unintended relationships within an Active Directory or Azure environment. To use it, you need several components:
+- SharpHound - is used for collect the data
+- Neo4j - is a graph database management system developed by Neo4j, Inc.
+- BloodHound
+
+Using SharpHound to collect data
+
+```powershell
+. .\C:\AD\BloodHound-master\Ingestors\SharpHound.ps1
+Invoke-BloodHound -CollectionMethod All -Verbose # collects all data from the domain
+Invoke-BloodHound -CollectionMethod LoggedOn -Verbose # for the sessions
+```
+
+Installation of Neo4j
+
+```powershell
+cd C:\AD\neo4j-community-4.1.1\bin>
+.\neo4j.bat install-service
+.\neo4j.bat start
+```
+
+After collecting the data and starting Neo4j, you can go to the URL http://localhost:7474 to change de default creds *neo4j:neo4j*.
+Once this is done, close the browser, go to the `BloodHound-win32-x64` folder and launch bloodhound.
+
+Finally, click on `Upload Data` and select the .zip file that contains the domain data.
 
 ## [↑](#table-of-contents) Lateral Movement
 
@@ -114,4 +210,6 @@ Two ways:
 ## [↑](#table-of-contents) Cross Forest Attacks
 
 ## [↑](#table-of-contents) Detection And Defense
+
+Enumération (voir cours enum)
 
