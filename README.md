@@ -176,6 +176,8 @@ Several tools:
 - Neo4j - is a graph database management system developed by Neo4j, Inc.
 - BloodHound
 
+[Documentation](https://bloodhound.readthedocs.io/en/latest/index.html)
+
 Using SharpHound to collect data
 
 ```powershell
