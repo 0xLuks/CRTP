@@ -206,6 +206,10 @@ Finally, click on `Upload Data` and select the .zip file that contains the domai
 
 ### [](#-powershell-remoting) Powershell remoting
 
+PS Remoting allows you to run any Windows PowerShell command on one or more remote computers. You can establish persistent connections, start interactive sessions and run scripts on remote computers.
+
+[Documentation](https://docs.microsoft.com/en-us/powershell/scripting/learn/remoting/running-remote-commands?view=powershell-7.2)
+
 Access with PS Remoting to a remote machine (WINRM|5985/tcp)
 
 ```powershell
@@ -235,6 +239,8 @@ Enter-PSSession -Session $sess
 ```
 
 ### [](#-invoke-mimikatz) Invoke-Mimikatz
+
+[Invoke-Mimikatz](https://github.com/PowerShellMafia/PowerSploit/blob/master/Exfiltration/Invoke-Mimikatz.ps1) is a PowerSploit module created by `@JosephBialek`. It loads Mimikatz 2.0 into memory using PowerShell. Can be used to dump credentials without writing anything to disk. Can be used for any functionality provided with Mimikatz.
 
 Dump credentials on a local machine
 
